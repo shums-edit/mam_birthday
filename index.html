@@ -219,6 +219,15 @@
   .tile.matched .t-front{border-color:var(--gold);box-shadow:0 0 18px rgba(255,209,102,.75)}
   #memResult p{font-size:1.3rem}
 
+  /* start screen */
+  .start-gift{font-size:clamp(5rem,20vw,7.5rem);line-height:1;margin-bottom:18px;
+    filter:drop-shadow(0 0 24px rgba(255,209,102,.6));animation:bookFloat 3s ease-in-out infinite}
+  .start-title{font-family:'Great Vibes',cursive;font-size:clamp(2.6rem,10vw,4.6rem);line-height:1.15;color:var(--gold);
+    text-shadow:0 0 18px rgba(255,209,102,.5),0 0 40px rgba(255,95,162,.3)}
+  .start-btn{font-size:1.2rem;padding:16px 56px;animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 6px 24px rgba(255,95,162,.45),0 0 0 0 rgba(255,209,102,.55)}
+    50%{box-shadow:0 6px 24px rgba(255,95,162,.6),0 0 0 16px rgba(255,209,102,0)}}
+
   /* gift */
   .gift-hint{font-family:'Dancing Script',cursive;font-size:clamp(1.8rem,7vw,2.6rem);color:var(--gold);margin-bottom:34px}
   .gift-stage{position:relative;width:240px;height:250px;display:flex;align-items:flex-end;justify-content:center}
@@ -291,6 +300,14 @@
 <div class="stars" id="stars"></div>
 <canvas id="fx"></canvas>
 <div id="balloons"></div>
+<audio id="song" src="bdsong.mp4" loop preload="auto"></audio>
+
+<!-- 0. Start -->
+<section class="screen active" id="s-start">
+  <div class="start-gift">🎁</div>
+  <div class="start-title">Open your Birthday Surprise</div>
+  <button class="btn start-btn" id="startBtn">Open ✨</button>
+</section>
 
 <!-- 1. Title -->
 <section class="screen" id="s-title">
@@ -528,7 +545,14 @@ function opening(){
     go('s-title'); rain(80); sparkle(25);
   },3200);
 }
-addEventListener('load',opening);
+current='s-start';
+$('startBtn').onclick=function(){
+  this.disabled=true;
+  const song=$('song'); song.volume=1; song.currentTime=0;
+  song.play().catch(()=>{});
+  $('s-start').classList.remove('active'); current=null;
+  opening();
+};
 
 /* title appears letter by letter */
 let titleTyped=false;
